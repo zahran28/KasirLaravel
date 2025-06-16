@@ -12,7 +12,12 @@
     @vite(['resources/css/app.css', 'resources/css/style.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="//unpkg.com/alpinejs" defer></script>
-
+    <style>
+        input[type=number] {
+            appearance: none;
+            -moz-appearance: textfield;
+        }
+    </style>
 
 </head>
 
@@ -121,22 +126,30 @@
                 }, 3000);
             </script>
         @endif
+
         <div class="px-[5%] py-10">
-
-
-            {{-- <form id="form-pesanan" action="{{ route('tambah_menu') }}" method="POST">
-
+            <form id="form-pesanan" action="{{ route('tambah_menu') }}" method="POST">
                 @csrf
                 <input type="hidden" name="id_transaksi" value="{{ $code }}">
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
                     @foreach ($menus as $menu)
                         <div
-                            class="bg-white rounded-xl shadow-lg p-5 border hover:shadow-xl transition-all duration-200">
-                            <img src="{{ $menu->link ?? 'https://via.placeholder.com/150' }}"
-                                alt="{{ $menu->nama_makanan }}" class="w-full h-70 object-cover rounded-lg mb-3">
+                            class="bg-white rounded-xl shadow-lg p-5 border hover:shadow-xl transition-all duration-200 w-full">
 
-                            <h2 class="text-xl font-semibold text-gray-800 mb-1">{{ $menu->nama_makanan }}</h2>
+                            <div class="relative">
+                                @if ($menu->stok == 0)
+                                    <div
+                                        class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg z-10">
+                                        Stok Habis
+                                    </div>
+                                @endif
+
+                                <img src="{{ $menu->link ?? 'https://via.placeholder.com/150' }}"
+                                    alt="{{ $menu->nama_makanan }}" class="w-full h-48 object-cover rounded-lg mb-3" />
+                            </div>
+
+                            <h2 class="text-lg font-semibold text-gray-800 mb-1">{{ $menu->nama_makanan }}</h2>
                             <p class="text-sm text-gray-500 mb-2">{{ $menu->deskripsi }}</p>
 
                             <div class="flex justify-between text-sm mb-2">
@@ -144,100 +157,29 @@
                                 <span class="text-blue-600 font-bold">Rp {{ number_format($menu->harga) }}</span>
                             </div>
 
-                            <input type="hidden" name="id_makanan[]" value="{{ $menu->id }}">
+                            <input type="hidden" name="id_makanan[]" value="{{ $menu->id_makanan }}">
 
                             <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah:</label>
                             <div class="flex items-center gap-2">
                                 <button type="button"
                                     class="btn-decrement bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
-                                    onclick="decrement(this)" disabled>-</button>
+                                    onclick="decrement(this)" {{ $menu->stok == 0 ? 'disabled' : '' }}>-</button>
                                 <input type="number" name="jumlah[]" min="0" max="{{ $menu->stok }}"
-                                    value="0" class="w-20 text-center border-gray-300 rounded px-3 py-2"
+                                    value="0" class="w-16 text-center border-gray-300 rounded px-2 py-1"
                                     readonly>
                                 <button type="button"
                                     class="btn-increment bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
-                                    onclick="increment(this)">+</button>
+                                    onclick="increment(this)" {{ $menu->stok == 0 ? 'disabled' : '' }}>+</button>
                             </div>
+
                             <label for="catatan-{{ $menu->id }}"
-                                class="block text-sm font-medium text-gray-700 mt-4 mb-1">Catatan:</label>
-                            <textarea id="catatan-{{ $menu->id }}" name="catatan[]" rows="3"
+                                class="block text-sm font-medium text-gray-700 mt-3 mb-1">Catatan:</label>
+                            <textarea id="catatan-{{ $menu->id }}" name="catatan[]" rows="2"
                                 placeholder="Tambahkan catatan (opsional)..."
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y transition duration-200"></textarea>
                         </div>
                     @endforeach
                 </div>
-
-
-            </form> --}}
-            <form id="form-pesanan" action="{{ route('tambah_menu') }}" method="POST">
-                @csrf
-                <input type="hidden" name="id_transaksi" value="{{ $code }}">
-
-                <div class="swiper mySwiper">
-                    <div class="swiper-wrapper">
-                        @foreach ($menus as $menu)
-                            <div class="swiper-slide">
-                                <div
-                                    class="bg-white rounded-xl shadow-lg p-5 border hover:shadow-xl transition-all duration-200 w-full max-w-xs mx-auto">
-
-                                    <div class="relative">
-                                        @if ($menu->stok == 0)
-                                            <div
-                                                class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg z-10">
-                                                Stok Habis
-                                            </div>
-                                        @endif
-
-                                        <img src="{{ $menu->link ?? 'https://via.placeholder.com/150' }}"
-                                            alt="{{ $menu->nama_makanan }}"
-                                            class="w-full h-70 object-cover rounded-lg mb-3" />
-                                    </div>
-
-                                    <h2 class="text-lg font-semibold text-gray-800 mb-1">{{ $menu->nama_makanan }}</h2>
-                                    <p class="text-sm text-gray-500 mb-2">{{ $menu->deskripsi }}</p>
-
-                                    <div class="flex justify-between text-sm mb-2">
-                                        <span class="text-green-600 font-medium">Stok: {{ $menu->stok }}</span>
-                                        <span class="text-blue-600 font-bold">Rp
-                                            {{ number_format($menu->harga) }}</span>
-                                    </div>
-
-                                    <input type="text" name="id_makanan[]" value="{{ $menu->id_makanan}}">
-
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah:</label>
-                                    <div class="flex items-center gap-2">
-                                        <button type="button"
-                                            class="btn-decrement bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
-                                            onclick="decrement(this)"
-                                            {{ $menu->stok == 0 ? 'disabled' : '' }}>-</button>
-                                        <input type="number" name="jumlah[]" min="0"
-                                            max="{{ $menu->stok }}" value="0"
-                                            class="w-16 text-center border-gray-300 rounded px-2 py-1" readonly>
-                                        <button type="button"
-                                            class="btn-increment bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
-                                            onclick="increment(this)"
-                                            {{ $menu->stok == 0 ? 'disabled' : '' }}>+</button>
-                                    </div>
-
-                                    <label for="catatan-{{ $menu->id }}"
-                                        class="block text-sm font-medium text-gray-700 mt-3 mb-1">Catatan:</label>
-                                    <textarea id="catatan-{{ $menu->id }}" name="catatan[]" rows="2"
-                                        placeholder="Tambahkan catatan (opsional)..."
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y transition duration-200"></textarea>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <!-- Navigasi -->
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-
-                    <!-- Pagination -->
-                    {{-- <div class="swiper-pagination mt-4"></div> --}}
-                </div>
-
-
             </form>
 
 
@@ -251,10 +193,7 @@
             class="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-3 px-6 rounded-full shadow-lg">
             ✅ Submit Pesanan
         </button>
-        <a href="{{ route('lihat-pesanan', [$code]) }}"
-            class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg">
-            🧾 Lihat Total Pesanan
-        </a>
+
 
     </div>
 

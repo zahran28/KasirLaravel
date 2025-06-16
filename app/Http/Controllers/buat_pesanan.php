@@ -13,15 +13,17 @@ class buat_pesanan extends Controller
 {
     public function create_no_pesanan(request $request)
     {
-        // dd($request);
         $notransaksi = Carbon::now()->format('YmdHis');
+        // dd($notransaksi);
 
         $validate = $request->validate([
             'name' => ['required']
         ]);
         nama_transaksi::create([
             'nama_pesanan' => $validate['name'],
-            'kode_transaksi' => $notransaksi
+            'kode_transaksi' => $notransaksi,
+            'Bayar' => 0,
+            'kembalian'=> 0
         ]);
 
         return redirect(route("pilih_menu", $notransaksi))->with('success', 'buat pesanan berhasil');
@@ -43,7 +45,7 @@ class buat_pesanan extends Controller
             'jumlah' => ['required', 'array'],
             'catatan' => ['nullable', 'array'],
         ]);
-
+        // dd($request);
         $id_transaksi = $request->id_transaksi;
         $id_makanans = $request->id_makanan;
         $jumlahs = $request->jumlah;
@@ -81,7 +83,7 @@ class buat_pesanan extends Controller
 
         $notransaksi2 = $request->input('id_transaksi');
 
-        return redirect(route('pilih_menu', $notransaksi2))->with('success', 'buat pesanan berhasil');
+        return redirect(route('lihat-pesanan', $notransaksi2))->with('success', 'buat pesanan berhasil');
 
     }
 }

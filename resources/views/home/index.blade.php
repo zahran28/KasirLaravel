@@ -36,7 +36,7 @@
                 <a class="hover:underline" href="#">
                     Laporan
                 </a>
-                <a class="hover:underline" href="#">
+                <a class="hover:underline" href="">
                     Pengaturan
                 </a>
             </nav>
@@ -60,7 +60,7 @@
                 Laporan
             </a>
             <a class="block py-1 hover:underline" href="#">
-                Pengaturan
+                Logout
             </a>
         </nav>
     </header>
@@ -71,67 +71,91 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="bg-white shadow-md rounded-xl p-6">
                 <p class="text-gray-500">Penjualan Hari Ini</p>
-                <p class="text-2xl font-bold text-blue-600">12</p>
+                <p class="text-2xl font-bold text-blue-600">{{ $customerHariIni }}</p>
             </div>
             <div class="bg-white shadow-md rounded-xl p-6">
                 <p class="text-gray-500">Total Customer</p>
-                <p class="text-2xl font-bold text-green-600">28</p>
+                <p class="text-2xl font-bold text-green-600">{{ $totalCustomer }}</p>
             </div>
             <div class="bg-white shadow-md rounded-xl p-6">
                 <p class="text-gray-500">Pendapatan Hari Ini</p>
-                <p class="text-2xl font-bold text-yellow-600">Rp 350.000</p>
+                <p class="text-2xl font-bold text-yellow-600">Rp {{ number_format($pendapatanHariIni, 0, ',', '.') }}
+                </p>
             </div>
         </div>
 
-      <!-- Tombol untuk membuka modal -->
-<button id="openModalBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow font-semibold">
-  Buat Pesanan
-</button>
 
-<!-- Modal -->
-<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
-  <div class="bg-white p-6 rounded-lg w-1/3">
-    <div class="flex justify-between items-center">
-      <h3 class="text-xl font-semibold">Konfirmasi Pesanan</h3>
-      <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-    </div>
-    
-    <!-- Form Pesanan -->
-    <form action="{{ route('buat_pesanan') }}" method="POST" class="mt-4">
-      @csrf
-      <div class="mb-4">
-        <label for="nama" class="block text-sm font-medium text-gray-700">Nama Pemesan</label>
-        <input type="text" id="nama" name="name" class="mt-2 p-2 w-full border rounded-md">
-      </div>
+        <button id="openModalBtn"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow font-semibold">
+            Buat Pesanan
+        </button>
 
-      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow w-full">
-        Pesan
-      </button>
-    </form>
-  </div>
-</div>
+        <a href="{{ route('ViewTambah') }}">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow font-semibold">
+                Update Produk
+            </button>
+        </a>
+        <a href="{{ route('Metode') }}">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow font-semibold">
+                metode pembayaran
+            </button>
+        </a>
+        <a href="{{ route('show') }}">
+           <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow font-semibold">
+               Analisis Menu
+           </button>
+       </a>
+        <a href="{{ route('show') }}">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow font-semibold">
+                Profile
+            </button>
+        </a>
 
-<!-- JavaScript untuk Menampilkan dan Menyembunyikan Modal -->
-<script>
-  const openModalBtn = document.getElementById("openModalBtn");
-  const modal = document.getElementById("modal");
-  const closeModalBtn = document.getElementById("closeModalBtn");
+        <!-- Modal -->
+        <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+            <div class="bg-white p-6 rounded-lg w-1/3">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold">Konfirmasi Pesanan</h3>
+                    <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                </div>
 
-  openModalBtn.addEventListener("click", () => {
-    modal.classList.remove("hidden");
-  });
+                <!-- Form Pesanan -->
+                <form action="{{ route('buat_pesanan') }}" method="POST" class="mt-4">
+                    @csrf
+                    <div class="mb-4">
+                        <label for="nama" class="block text-sm font-medium text-gray-700">Nama Pemesan</label>
+                        <input type="text" id="nama" name="name" class="mt-2 p-2 w-full border rounded-md">
+                    </div>
 
-  closeModalBtn.addEventListener("click", () => {
-    modal.classList.add("hidden");
-  });
+                    <button type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow w-full">
+                        Pesan
+                    </button>
+                </form>
+            </div>
+        </div>
 
-  // Menutup modal jika klik di luar modal
-  window.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      modal.classList.add("hidden");
-    }
-  });
-</script>
+        <!-- JavaScript untuk Menampilkan dan Menyembunyikan Modal -->
+        <script>
+            const openModalBtn = document.getElementById("openModalBtn");
+            const modal = document.getElementById("modal");
+            const closeModalBtn = document.getElementById("closeModalBtn");
+
+            openModalBtn.addEventListener("click", () => {
+                modal.classList.remove("hidden");
+            });
+
+            closeModalBtn.addEventListener("click", () => {
+                modal.classList.add("hidden");
+            });
+
+            // Menutup modal jika klik di luar modal
+            window.addEventListener("click", (event) => {
+                if (event.target === modal) {
+                    modal.classList.add("hidden");
+                }
+            });
+        </script>
 
 </body>
 

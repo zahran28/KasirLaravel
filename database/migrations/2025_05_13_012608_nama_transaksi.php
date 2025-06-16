@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
             schema::create('nama_transaksi',function(Blueprint $table ){
-                $table->id();
+                $table->id()->primary();
                 $table->biginteger('kode_transaksi');
                 $table->string('nama_pesanan');
+                $table->biginteger('Bayar');
+                $table->biginteger('kembalian');
                 $table->timestamps();
             });
     }

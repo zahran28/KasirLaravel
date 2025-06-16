@@ -600,7 +600,7 @@
 </html>
 
 
-{{--
+
         <div id="myModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
             <div class="bg-white p-6 rounded shadow-lg w-11/12 max-w-lg relative">
                 <button id="closeBtn" class="absolute top-2 right-2 text-gray-500 hover:text-black text-2xl font-bold">
@@ -776,4 +776,13 @@
         }
     </script>
 </body>
-</html> --}}
+</html>
+
+Route::get('/profile', [ProfileController::class, 'show'])->name('show');
+    Route::post('/profile/update-profile', [ProfileController::class, 'updateProfile'])->name('update-profile');
+    Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->name('pdate-password');
+
+
+
+
+

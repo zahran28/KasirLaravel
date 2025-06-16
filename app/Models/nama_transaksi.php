@@ -13,6 +13,8 @@ class nama_transaksi extends Model
     protected $fillable = [
         'kode_transaksi',
         'nama_pesanan',
+        'Bayar',
+        'kembalian',
     ];
 
         // Relasi ke daftar_transaksi
